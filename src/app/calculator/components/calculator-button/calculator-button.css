@@ -1,0 +1,5 @@
+@reference "../../../../styles.css";
+
+button{
+  @apply outline-none focus:outline-none hover:bg-indigo-400 text-white text-xl font-light
+}

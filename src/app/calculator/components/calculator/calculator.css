@@ -1,0 +1,5 @@
+@reference "../../../../styles.css";
+
+.is-command{
+  @apply bg-indigo-700/20
+}
