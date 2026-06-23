@@ -3,3 +3,11 @@
 button{
   @apply outline-none focus:outline-none hover:bg-indigo-400 text-white text-xl font-light
 }
+
+.is-command{
+  @apply bg-indigo-700/20;
+}
+
+.is-pressed{
+  @apply bg-indigo-500;
+}

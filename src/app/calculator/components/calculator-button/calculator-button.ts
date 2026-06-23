@@ -1,4 +1,4 @@
-import { booleanAttribute, ChangeDetectionStrategy, Component, HostBinding, input, OnInit } from '@angular/core';
+import { booleanAttribute, ChangeDetectionStrategy, Component, ElementRef, HostBinding, input, OnInit, output, signal, viewChild } from '@angular/core';
 
 @Component({
   selector: 'calculator-button',
@@ -7,10 +7,16 @@ import { booleanAttribute, ChangeDetectionStrategy, Component, HostBinding, inpu
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl:"./calculator-button.css",
   host:{
-    class:"w-1/4 border-r border-b border-indigo-400"
+    class:"border-r border-b border-indigo-400",
+    "[class.w-2/4]":"isDoubleSize()",
+    "[class.w-1/4]":"!isDoubleSize()",
   }
 })
 export class CalculatorButton {
+
+  public isPressed = signal(false);
+  public onClick = output<string>();
+  public contentValue = viewChild<ElementRef<HTMLButtonElement>>("button");
   public isCommand = input(false, {
     //  transform: (value: boolean | string) => {
     //   return typeof value === 'string'
@@ -24,12 +30,37 @@ export class CalculatorButton {
     transform: booleanAttribute
   });
 
-  @HostBinding("class.is-command") get commandStyle(){
-    return this.isCommand();
+  // @HostBinding("class.is-command") get commandStyle(){
+  //   return this.isCommand();
+  // }
+
+  // @HostBinding("class.w-2/4") get doubleSizeStyle(){
+  //   return this.isDoubleSize();
+  // }
+
+  public handleClick(){
+    if(!this.contentValue()?.nativeElement){
+      return
+    }
+    this.onClick.emit(this.contentValue()!.nativeElement.innerText.trim());
   }
 
-  @HostBinding("class.w-2/4") get doubleSizeStyle(){
-    return this.isDoubleSize();
+  public keyboardPressedStyle(key: string){
+    if(!this.contentValue){
+      return;
+    }
+    const value = this.contentValue()!.nativeElement.innerText.trim();
+
+    if(value !== key){
+      return;
+    }
+    this.isPressed.set(true);
+
+    setTimeout(() => {
+      this.isPressed.set(false);
+    }, 100);
+
+
   }
 
 }
